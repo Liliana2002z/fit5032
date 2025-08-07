@@ -1,15 +1,16 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <JSONLab />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import JSONLab from './components/JSON.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    JSONLab
   }
 }
 </script>
