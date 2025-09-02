@@ -253,7 +253,6 @@ const validateConfirmPassword = (blur = false) => {
             </div>
           </div>
           
-
           <div class="text-center">
             <button type="submit" class="btn btn-primary me-2">Submit</button>
             <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
@@ -273,9 +272,6 @@ const validateConfirmPassword = (blur = false) => {
       </div>
     </div>
   </div>
-
-  
-
   </template>
 
 <style scoped>
