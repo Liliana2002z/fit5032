@@ -7,7 +7,7 @@ const router = useRouter();
 
 const handleLogout = () => {
   logout();
-  router.push({ name: 'Home' }); // 登出后重定向到主页
+  router.push({ name: 'Home' });
 };
 </script>
 
@@ -25,11 +25,11 @@ const handleLogout = () => {
         <li class="nav-item">
           <router-link to="/about" class="nav-link" active-class="active">About</router-link>
         </li>
-        <li v-if="!isAuthenticated" class="nav-item">
-          <router-link to="/login" class="nav-link" active-class="active">Login</router-link>
+        <li class="nav-item">
+          <router-link to="/Firelogin" class="nav-link" active-class="active">Firebase Login</router-link>
         </li>
-        <li v-else class="nav-item">
-          <a @click="handleLogout" class="nav-link">Logout</a>
+        <li class="nav-item">
+          <router-link to="/Fireregister" class="nav-link" active-class="active">Firebase Register</router-link>
         </li>
       </ul>
     </header>
