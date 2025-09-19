@@ -12,16 +12,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineExpose } from 'vue';
 import { db } from '@/firebase/init';
 import { 
   collection, 
   query, 
   where, 
   getDocs, 
-  doc,
-  deleteDoc,
-  updateDoc
+  doc, 
+  deleteDoc, 
+  updateDoc 
 } from 'firebase/firestore';
 
 const books = ref([]);
@@ -48,8 +48,7 @@ const handleDelete = async (id) => {
     try {
       await deleteDoc(doc(db, 'books', id));
       alert('Book deleted successfully!');
-
-      fetchBooks();
+      fetchBooks(); 
     } catch (error) {
       console.error('Error deleting book: ', error);
       alert('Failed to delete book.');
@@ -59,7 +58,6 @@ const handleDelete = async (id) => {
 
 const handleUpdate = async (id) => {
   try {
-
     const newName = prompt('Enter a new name for the book:');
     if (newName) {
       const bookRef = doc(db, 'books', id);
@@ -67,8 +65,7 @@ const handleUpdate = async (id) => {
         name: newName
       });
       alert('Book updated successfully!');
-     
-      fetchBooks();
+      fetchBooks(); 
     }
   } catch (error) {
     console.error('Error updating book: ', error);
@@ -79,8 +76,9 @@ const handleUpdate = async (id) => {
 onMounted(() => {
   fetchBooks();
 });
+
+
+defineExpose({
+  fetchBooks
+});
 </script>
-
-<style scoped>
-
-</style>

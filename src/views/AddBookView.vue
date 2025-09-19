@@ -16,7 +16,11 @@
     </div>
     
     <div class="book-list-display">
-      <BookList />
+      <BookList ref="bookList" />
+    </div>
+    
+    <div class="filtered-book-list-display">
+      <FilteredBookList ref="filteredBookList" />
     </div>
   </div>
 </template>
@@ -26,6 +30,11 @@ import { ref } from 'vue';
 import { db } from '@/firebase/init';
 import { collection, addDoc } from 'firebase/firestore';
 import BookList from '@/components/BookList.vue';
+import FilteredBookList from '@/components/FilteredBookList.vue';
+
+// 创建模板引用变量
+const bookList = ref(null);
+const filteredBookList = ref(null);
 
 const isbn = ref('');
 const name = ref('');
@@ -37,13 +46,26 @@ const addBook = async () => {
       alert('ISBN must be a valid number!');
       return;
     }
+
     await addDoc(collection(db, 'books'), {
       isbn: isbnNumber,
       name: name.value
     });
+
     alert('Book added successfully!');
+    
+    // 清空表单
     isbn.value = '';
     name.value = '';
+
+    // 在添加成功后，调用子组件的函数来刷新数据
+    if (bookList.value) {
+      bookList.value.fetchBooks();
+    }
+    if (filteredBookList.value) {
+      filteredBookList.value.fetchFilteredBooks();
+    }
+
   } catch (error) {
     console.error('Error adding book: ', error);
     alert('Failed to add book. Please try again.');
@@ -61,7 +83,6 @@ const addBook = async () => {
 
 .add-book-form {
   max-width: 400px;
-  margin: 50px auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
