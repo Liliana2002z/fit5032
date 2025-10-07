@@ -1,6 +1,3 @@
-// functions/index.js (V2 API 版本)
-
-// The Firebase Admin SDK to access Firestore.
 const admin = require("firebase-admin");
 admin.initializeApp();
 
@@ -12,15 +9,12 @@ const {onRequest} = require("firebase-functions/v2/https");
  * V2 Functions handle CORS via configuration, not by wrapping the function.
  */
 exports.countBooks = onRequest(
-    // 1. 设置 V2 函数的配置
     {
-      // 允许所有来源（*）进行跨域访问。这是关键！
       cors: true,
-      region: "us-central1", // 确保区域与你的部署一致
+      region: "us-central1",
     },
-    // 2. 编写请求处理逻辑
+
     async (request, response) => {
-      // V2 函数不需要手动处理 OPTIONS 请求，但确保只处理 GET
       if (request.method !== "GET") {
         return response.status(405).send("Method Not Allowed");
       }
@@ -38,5 +32,42 @@ exports.countBooks = onRequest(
         console.error("Error counting books:", error);
         response.status(500).send("Error counting books.");
       }
+    },
+);
+
+const {onDocumentCreated} = require("firebase-functions/v2/firestore");
+exports.onNewBookCreate = onDocumentCreated(
+    {
+      document: "books/{bookId}",
+      region: "us-central1",
+    },
+    async (event) => {
+      const snapshot = event.data;
+      if (!snapshot) {
+        console.log("No data associated with the event.");
+        return;
+      }
+      const originalData = snapshot.data();
+      const bookName = originalData.name;
+
+      if (typeof bookName !== "string") {
+        console.log("Book name is not a string, skipping capitalization.");
+        return;
+      }
+
+      const capitalizedName = bookName.toUpperCase();
+
+      if (capitalizedName === bookName) {
+        console.log("Name already capitalized, skipping database write.");
+        return;
+      }
+
+      console.log(`Capitalizing name from '${bookName}' to ` +
+        `'${capitalizedName}'`);
+
+      return snapshot.ref.set(
+          {name: capitalizedName},
+          {merge: true},
+      );
     },
 );
