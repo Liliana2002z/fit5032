@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 允许任何用户对所有文档进行读、写、更新和删除操作
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
