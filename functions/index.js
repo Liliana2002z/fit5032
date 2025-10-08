@@ -70,3 +70,36 @@ exports.onNewBookCreate = onDocumentCreated(
       );
     },
 );
+
+/**
+ * V2 HTTP Function to retrieve all books from the 'books' collection.
+ */
+exports.getAllBooks = onRequest(
+    {
+      cors: true,
+      region: "us-central1",
+    },
+    async (request, response) => {
+      if (request.method !== "GET") {
+        return response.status(405).send("Method Not Allowed");
+      }
+
+      try {
+        const booksRef = admin.firestore().collection("books");
+        const snapshot = await booksRef.get();
+        const booksArray = [];
+
+        snapshot.forEach((doc) => {
+          booksArray.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+
+        response.status(200).json(booksArray);
+      } catch (error) {
+        console.error("Error retrieving all books:", error);
+        response.status(500).send("Error retrieving all books.");
+      }
+    },
+);
