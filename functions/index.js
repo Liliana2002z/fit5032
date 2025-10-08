@@ -26,7 +26,6 @@ exports.countBooks = onRequest(
 
         response.status(200).json({
           count: bookCount,
-          message: `Book count retrieved successfully via V2 API.`,
         });
       } catch (error) {
         console.error("Error counting books:", error);
